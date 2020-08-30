@@ -15,7 +15,7 @@ export default {
     try {
       await this.fetchRoom(this.roomId);
 
-      webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
+      await webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
     } catch (e) {
       console.error('Failure fetching room');
     }
@@ -25,12 +25,14 @@ export default {
   },
   methods: {
     ...mapActions('room', ['fetchRoom']),
+    ...mapActions('guest', ['removeGuest']),
     onSocketSuccessfulConnected() {
-      webSocketService.stompClient.subscribe('/user/queue/registeredUser', (guest) => {
-        console.log(guest.body);
+      webSocketService.stompClient.subscribe(`/topic/guestHasLeaved/${ this.roomId }`, (guestId) => {
+        // this.removeGuest();
+        console.error(guestId);
       });
-      webSocketService.stompClient.send(`/app/room/${ this.roomId }/registerGuest`);
 
+      webSocketService.stompClient.send(`/app/room/${ this.roomId }/registerGuest`);
       console.warn('SOCKED SUCCESSFUL CONNECTED');
     },
     onSocketErrorConnected() {

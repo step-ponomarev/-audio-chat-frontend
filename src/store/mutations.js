@@ -1,3 +1,5 @@
 export default {
-  SET_ROOM: 'SET_ROOM'
+  SET_ROOM: 'SET_ROOM',
+  SET_GUESTS: 'SET_GUESTS',
+  REMOVE_GUEST: 'REMOVE_GUEST'
 }
