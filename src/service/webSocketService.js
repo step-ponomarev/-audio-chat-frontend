@@ -3,6 +3,10 @@ import { Stomp } from "@stomp/stompjs";
 
 class WebSocketService {
   constructor() {
+    this.stompClient = null;
+  }
+
+  init() {
     this.stompClient = Stomp.over(
       new SockJS('http://localhost:8080/chat-app')
     );

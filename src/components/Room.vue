@@ -13,10 +13,11 @@ export default {
   data: () => ({}),
   async mounted() {
     try {
+      webSocketService.init();
+      webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
+
       await this.fetchRoom(this.roomId);
       await this.fetchGuests(this.roomId);
-
-      await webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
     } catch (e) {
       console.error('Failure fetching room');
     }
