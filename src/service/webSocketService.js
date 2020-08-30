@@ -19,7 +19,9 @@ class WebSocketService {
 
   disconnect() {
     if (this.stompClient !== null) {
-      this.stompClient.disconnect();
+      this.stompClient.disconnect(() => {
+        console.error('DISCONNE');
+      });
     }
   }
 }

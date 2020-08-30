@@ -1,10 +1,18 @@
 <template>
-
+    <div>
+        <button @click="onClickButton">Создать комнату</button>
+    </div>
 </template>
 
 <script>
+
 export default {
-  name: "CreateRoomButton"
+  name: "CreateRoomButton",
+  methods: {
+    onClickButton() {
+      this.$emit('handleClickButton');
+    }
+  }
 }
 </script>
 
