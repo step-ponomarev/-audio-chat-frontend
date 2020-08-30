@@ -27,9 +27,9 @@ export default {
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('guest', ['removeGuest']),
     onSocketSuccessfulConnected() {
-      webSocketService.stompClient.subscribe(`/topic/guestHasLeaved/${ this.roomId }`, (guestId) => {
-        // this.removeGuest();
-        console.error(guestId);
+      // eslint-disable-next-line no-unused-vars
+      webSocketService.stompClient.subscribe(`/queue/room/${this.roomId}/guestHasLeaved`, (guestId) => {
+        this.removeGuest(guestId);
       });
 
       webSocketService.stompClient.send(`/app/room/${ this.roomId }/registerGuest`);
