@@ -14,6 +14,7 @@ export default {
   async mounted() {
     try {
       await this.fetchRoom(this.roomId);
+      await this.fetchGuests(this.roomId);
 
       await webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
     } catch (e) {
@@ -25,11 +26,18 @@ export default {
   },
   methods: {
     ...mapActions('room', ['fetchRoom']),
-    ...mapActions('guest', ['removeGuest']),
+    ...mapActions('guest', ['removeGuest', 'addGuest', 'setUser', 'fetchGuests']),
     onSocketSuccessfulConnected() {
-      // eslint-disable-next-line no-unused-vars
-      webSocketService.stompClient.subscribe(`/queue/room/${this.roomId}/guestHasLeaved`, (guestId) => {
-        this.removeGuest(guestId);
+      webSocketService.stompClient.subscribe(`/queue/room/${ this.roomId }/guestHasJoined`, async (guest) => {
+        this.addGuest(await JSON.parse(guest.body));
+      });
+
+      webSocketService.stompClient.subscribe(`/queue/room/${ this.roomId }/guestHasLeaved`, (guestId) => {
+        this.removeGuest(guestId.body);
+      });
+
+      webSocketService.stompClient.subscribe(`/user/queue/room/${ this.roomId }/currentUser`, async (user) => {
+        this.setUser(await JSON.parse(user.body));
       });
 
       webSocketService.stompClient.send(`/app/room/${ this.roomId }/registerGuest`);
