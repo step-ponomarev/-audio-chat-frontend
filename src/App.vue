@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <button type="text" placeholder="message">Выйти на видеосвязь</button>
-    <video ref="video"></video>
+    <CreateRoomButton/>
   </div>
 </template>
 
 <script>
-import webSocketService from "@/service/ws";
+import webSocketService from "@/service/webSocketService";
 // eslint-disable-next-line no-unused-vars
 import Peer from 'peerjs';
+import CreateRoomButton from "@/components/CreateRoomButton";
 
 export default {
   name: 'App',
-  components: {},
+  components: { CreateRoomButton },
   data: () => ({
     src: '',
     sender: false,
@@ -26,8 +25,12 @@ export default {
         console.log(guest);
       });
     }, () => {
-    console.warn('HERE');
+      console.warn('HERE');
     });
+
+    fetch('http://localhost:8080/api/room/create').then(async res => {
+      console.log(await res.text());
+    })
   }
   // async mounted() {
   //   const configuration = {
