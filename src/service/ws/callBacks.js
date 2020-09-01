@@ -1,6 +1,6 @@
 import store from "@/store";
 
-const { dispatch, getters } = store;
+const { dispatch } = store;
 
 export async function onUserJoined(guest) {
   const user = await JSON.parse(guest.body);
@@ -24,10 +24,8 @@ export async function onUserLeaved(guest) {
 
 export async function onMessageReceived(message) {
   const msg = await JSON.parse(message.body);
-  const guestById = getters["guest/guestById"];
-  const senderName = guestById(msg.senderId).name;
 
-  dispatch('message/addMessage', { ...msg, senderName });
+  dispatch('message/addMessage', msg);
 }
 
 export async function getCurrentUser(usr) {
