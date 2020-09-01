@@ -1,5 +1,4 @@
 import mutations from "@/store/mutations";
-// import Vue from "vue";
 
 const { PUSH_NOTIFICATION, DELETE_NOTIFICATION } = mutations;
 

@@ -22,6 +22,12 @@ export async function onUserLeaved(guest) {
   });
 }
 
+export async function onMessageReceived(message) {
+  const msg = await JSON.parse(message.body);
+
+  dispatch('message/addMessage', msg);
+}
+
 export async function getCurrentUser(user) {
   dispatch('guest/setUser', await JSON.parse(user.body));
 }

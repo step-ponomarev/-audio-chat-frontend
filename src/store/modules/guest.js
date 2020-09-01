@@ -9,10 +9,11 @@ const guest = {
   namespaced: true,
   state: {
     guests: {},
-    user: null
+    user: {}
   },
   getters: {
-    guestList: ({ guests }) => Object.values(guests)
+    guestList: ({ guests }) => Object.values(guests),
+    user: ({user}) => user
   },
   actions: {
     async fetchGuests({ commit }, roomId) {
@@ -21,7 +22,7 @@ const guest = {
 
         commit(SET_GUESTS, guestsObj);
       } catch (e) {
-        return Promise.reject("No room");
+        return Promise.reject("Something wrong");
       }
     },
     setGuestList({ commit }, guestList) {

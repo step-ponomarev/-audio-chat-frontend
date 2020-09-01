@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client';
 import { Stomp } from "@stomp/stompjs";
-import { onUserJoined, onUserLeaved, getCurrentUser } from "@/service/ws/callBacks";
+import { onUserJoined, onUserLeaved, getCurrentUser, onMessageReceived } from "@/service/ws/callBacks";
 
 class RoomSocketService {
   constructor() {
@@ -23,6 +23,7 @@ class RoomSocketService {
       this.stompClient.subscribe(`/user/queue/room/${ roomId }/guestHasJoined`, onUserJoined);
       this.stompClient.subscribe(`/queue/room/${ roomId }/guestHasLeaved`, onUserLeaved);
       this.stompClient.subscribe(`/user/queue/room/${ roomId }/currentUser`, getCurrentUser);
+      this.stompClient.subscribe(`/queue/room/${ roomId }/newMessage`, onMessageReceived);
 
       this.stompClient.send(`/app/room/${ roomId }/registerGuest`);
     }
@@ -32,7 +33,8 @@ class RoomSocketService {
 
   disconnect() {
     if (this.stompClient !== null) {
-      this.stompClient.disconnect(() => {});
+      this.stompClient.disconnect(() => {
+      });
     }
   }
 }
