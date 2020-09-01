@@ -1,4 +1,4 @@
-import { getGuests } from "@/service/guestService";
+import { getGuests } from "@/service/ajax/guestService";
 import { guestArrayToObj } from "@/helpers/serviceHelpers";
 import mutations from "@/store/mutations";
 import Vue from "vue";
@@ -25,7 +25,6 @@ const guest = {
       }
     },
     setGuestList({ commit }, guestList) {
-      console.error(guestList);
       commit(SET_GUESTS, guestArrayToObj(guestList));
     },
     addGuest({ commit }, guest) {

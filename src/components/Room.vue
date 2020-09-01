@@ -1,20 +1,29 @@
 <template>
 <div>
-    {{ roomId }}
+    <Notifications/>
+    {{ guestList }}
+    <button :style="isSayMode" @click="say">
+        {{ sayMode ? `Say mode` : `Silence mode`}}
+    </button>
 </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import webSocketService from "@/service/webSocketService";
+import webSocketService from "@/service/ws/webSocketService";
+import Notifications from "@/components/notifications/Notifications";
 
 export default {
   name: "Room",
-  data: () => ({}),
+  components: { Notifications },
+  data: () => ({
+    sayMode: false,
+    media: null
+  }),
   async mounted() {
     try {
       webSocketService.init();
-      webSocketService.connect(this.onSocketSuccessfulConnected, this.onSocketErrorConnected);
+      webSocketService.connect(this.roomId, this.onSocketErrorConnected);
 
       await this.fetchRoom(this.roomId);
       await this.fetchGuests(this.roomId);
@@ -29,29 +38,34 @@ export default {
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('guest', ['removeGuest', 'addGuest', 'setUser', 'fetchGuests']),
     onSocketSuccessfulConnected() {
-      webSocketService.stompClient.subscribe(`/queue/room/${ this.roomId }/guestHasJoined`, async (guest) => {
-        this.addGuest(await JSON.parse(guest.body));
-      });
 
-      webSocketService.stompClient.subscribe(`/queue/room/${ this.roomId }/guestHasLeaved`, (guestId) => {
-        this.removeGuest(guestId.body);
-      });
-
-      webSocketService.stompClient.subscribe(`/user/queue/room/${ this.roomId }/currentUser`, async (user) => {
-        this.setUser(await JSON.parse(user.body));
-      });
-
-      webSocketService.stompClient.send(`/app/room/${ this.roomId }/registerGuest`);
-      console.warn('SOCKED SUCCESSFUL CONNECTED');
     },
     onSocketErrorConnected() {
       console.error('FAILURE SOCKET CONNECTION');
+    },
+    async say() {
+      this.sayMode = !this.sayMode;
+
+      if (this.sayMode) {
+        const media = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const stream = new MediaStream();
+        media.getTracks().forEach(track => stream.addTrack(track, media));
+
+        webSocketService.stompClient.send(`/app/room/${ this.roomId }/say`, {}, "kek");
+      } else {
+        this.media = null;
+      }
     }
   },
   computed: {
     ...mapGetters('room', ['room']),
+    ...mapGetters('guest', ['guestList']),
     roomId() {
       return this.$route.params.id;
+    },
+    isSayMode() {
+      return this.sayMode ? 'color: green;' : 'color: red';
     }
   },
 }

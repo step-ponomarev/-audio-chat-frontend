@@ -4,7 +4,7 @@
 
 <script>
 import CreateRoomButton from "@/components/CreateRoomButton";
-import { createRoom } from "@/service/roomService";
+import { createRoom } from "@/service/ajax/roomService";
 
 export default {
   name: "MainPage",

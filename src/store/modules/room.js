@@ -1,4 +1,4 @@
-import { getRoom } from "@/service/roomService";
+import { getRoom } from "@/service/ajax/roomService";
 import mutations from "@/store/mutations";
 
 const { SET_ROOM } = mutations
