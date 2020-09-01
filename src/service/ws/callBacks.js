@@ -15,7 +15,7 @@ export async function onUserJoined(guest) {
 export async function onUserLeaved(guest) {
   const user = await JSON.parse(guest.body);
 
-  dispatch('guest/removeGuest', user.sessionId);
+  dispatch('guest/removeGuest', user.id);
   dispatch("notifications/addNotification", {
     msg: `${ user.name } покинул комнату.`,
     type: 'success'
@@ -28,6 +28,9 @@ export async function onMessageReceived(message) {
   dispatch('message/addMessage', msg);
 }
 
-export async function getCurrentUser(user) {
-  dispatch('guest/setUser', await JSON.parse(user.body));
+export async function getCurrentUser(usr) {
+  const user = await JSON.parse(usr.body);
+
+  dispatch('guest/setUser', user);
+  dispatch('guest/addGuest', user);
 }

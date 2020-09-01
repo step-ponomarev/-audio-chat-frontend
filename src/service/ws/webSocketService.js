@@ -18,7 +18,7 @@ class RoomSocketService {
       this.stompClient.subscribe(`/user/queue/room/${ roomId }/currentUser`, getCurrentUser);
       this.stompClient.subscribe(`/queue/room/${ roomId }/newMessage`, onMessageReceived);
 
-      this.stompClient.send(`/app/room/${ roomId }/registerGuest`);
+      this.stompClient.send(`/app/guest/room/${ roomId }/registerGuest`);
     }
 
     const errorCallback = (e) => {

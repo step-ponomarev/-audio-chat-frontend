@@ -1,6 +1,6 @@
 export function guestArrayToObj(array) {
   return array.reduce((acc, item) => {
-    acc[item.sessionId] = item;
+    acc[item.id] = item;
 
     return acc;
   }, {})

@@ -7,7 +7,7 @@ const host = 'http://localhost:8080'
  */
 export async function getMessages(roomId) {
   try {
-    const response = await fetch(`${ host }/api/room/${ roomId }/message`);
+    const response = await fetch(`${ host }/api/message/room/${ roomId }`);
 
     if (response.ok) return await response.json();
 

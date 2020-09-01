@@ -1,10 +1,12 @@
 <template>
     <div>
-        {{ message.senderName }} : {{message.message }}
+        {{ guestById(message.senderId).name }} : {{ message.message }}
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "MessageItem",
   props: {
@@ -12,6 +14,9 @@ export default {
       Type: Object,
       required: true
     }
+  },
+  computed: {
+    ...mapGetters('guest', ['guestById'])
   }
 }
 </script>

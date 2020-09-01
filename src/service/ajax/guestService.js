@@ -7,7 +7,7 @@ const host = 'http://localhost:8080'
  */
 export async function getGuests(roomId) {
   try {
-    const response = await fetch(`${ host }/api/room/${ roomId }/guest`);
+    const response = await fetch(`${ host }/api/guest/room/${ roomId }`);
 
     if (response.ok) return await response.json();
 

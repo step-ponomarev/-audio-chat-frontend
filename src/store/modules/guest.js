@@ -13,7 +13,9 @@ const guest = {
   },
   getters: {
     guestList: ({ guests }) => Object.values(guests),
-    user: ({user}) => user
+    guestListForRender: ({ guests, user }) => Object.values(guests).filter(guest => guest.id !== user.id),
+    guestById: ({ guests }) => id => guests[id],
+    user: ({ user }) => user
   },
   actions: {
     async fetchGuests({ commit }, roomId) {
@@ -43,7 +45,7 @@ const guest = {
       state.guests = guestsObj;
     },
     [ADD_GUEST](state, guest) {
-      Vue.set(state.guests, guest.sessionId, guest);
+      Vue.set(state.guests, guest.id, guest);
     },
     [REMOVE_GUEST](state, guestId) {
       Vue.delete(state.guests, guestId);
