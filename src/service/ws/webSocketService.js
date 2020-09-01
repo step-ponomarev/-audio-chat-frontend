@@ -2,7 +2,6 @@ import SockJS from 'sockjs-client';
 import { Stomp } from "@stomp/stompjs";
 import { onUserJoined, onUserLeaved, getCurrentUser } from "@/service/ws/callBacks";
 
-
 class RoomSocketService {
   constructor() {
     this.stompClient = null;
