@@ -7,18 +7,11 @@ class RoomSocketService {
     this.stompClient = null;
   }
 
-  init() {
+  init(roomId) {
     this.stompClient = Stomp.over(
       new SockJS('http://localhost:8080/chat-app')
     );
-  }
 
-  /**
-   *
-   * @param {String} roomId
-   * @param {Function} errorCallback
-   */
-  connect(roomId, errorCallback) {
     const successCallBack = () => {
       this.stompClient.subscribe(`/user/queue/room/${ roomId }/guestHasJoined`, onUserJoined);
       this.stompClient.subscribe(`/queue/room/${ roomId }/guestHasLeaved`, onUserLeaved);
@@ -28,7 +21,19 @@ class RoomSocketService {
       this.stompClient.send(`/app/room/${ roomId }/registerGuest`);
     }
 
+    const errorCallback = (e) => {
+      console.error("FAILED WS CONNECTION", e);
+    }
+
     this.stompClient.connect({}, successCallBack, errorCallback);
+  }
+
+  sendMessage(msg) {
+    if (this.stompClient === null) {
+      throw new Error("Failed message sending");
+    }
+
+    this.stompClient.send(`/app/sendMessage`, {}, msg);
   }
 
   disconnect() {

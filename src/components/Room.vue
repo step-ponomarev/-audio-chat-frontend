@@ -23,8 +23,7 @@ export default {
   //TODO: Возможно имеет смысл сделать watch за роутом room вместо маунтед, но как поступать с дисконнектом?
   async mounted() {
     try {
-      webSocketService.init();
-      webSocketService.connect(this.roomId, this.onSocketErrorConnected);
+      webSocketService.init(this.roomId);
 
       await this.fetchRoom(this.roomId);
       await this.fetchGuests(this.roomId);
@@ -41,9 +40,6 @@ export default {
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('message', ['fetchMessages']),
-    onSocketErrorConnected() {
-      console.error('FAILURE SOCKET CONNECTION');
-    }
   },
   computed: {
     ...mapGetters('room', ['room']),
