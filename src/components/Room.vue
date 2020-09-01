@@ -1,10 +1,13 @@
 <template>
 <div>
     <Notifications/>
-    {{ guestList }}
     <button :style="isSayMode" @click="say">
         {{ sayMode ? `Say mode` : `Silence mode`}}
     </button>
+
+    <ui>
+        <li v-for="(guest, index) in guestList" :key="index"> {{ guest.name }}</li>
+    </ui>
 </div>
 </template>
 

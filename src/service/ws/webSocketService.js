@@ -25,7 +25,6 @@ class RoomSocketService {
       this.stompClient.subscribe(`/user/queue/room/${ roomId }/currentUser`, getCurrentUser);
 
       this.stompClient.send(`/app/room/${ roomId }/registerGuest`);
-      console.warn('SOCKED SUCCESSFUL CONNECTED');
     }
 
     this.stompClient.connect({}, successCallBack, errorCallback);
@@ -33,9 +32,7 @@ class RoomSocketService {
 
   disconnect() {
     if (this.stompClient !== null) {
-      this.stompClient.disconnect(() => {
-
-      });
+      this.stompClient.disconnect(() => {});
     }
   }
 }

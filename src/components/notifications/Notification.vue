@@ -16,9 +16,7 @@ export default {
     }
   },
   mounted() {
-    console.warn(this.notification.msg);
     setTimeout(() => this.removeNotification(this.notification), 10000);
-
   },
   methods: {
     ...mapActions('notifications', ['removeNotification'])
