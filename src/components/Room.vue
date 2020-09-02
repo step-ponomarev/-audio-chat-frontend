@@ -16,6 +16,7 @@ import webSocketService from "@/service/ws/webSocketService";
 import Notifications from "@/components/notifications/Notifications";
 import GuestList from "@/components/guest/GuestList";
 import Chat from "@/components/chat/Chat";
+import janusService from "@/service/ws/janusService";
 
 export default {
   name: "Room",
@@ -27,6 +28,9 @@ export default {
       await this.fetchRoom(this.roomId);
       await this.fetchGuests(this.roomId);
       await this.fetchMessages(this.roomId);
+
+      await janusService.connect();
+      await janusService.joinAudioRoom(this.room.audioRoomId);
     } catch (e) {
       //TODO: Сделать нотификацию тип
       console.error(e);
@@ -34,6 +38,7 @@ export default {
   },
   destroyed() {
     webSocketService.disconnect();
+    janusService.leaveAudioRoom();
   },
   methods: {
     ...mapActions('room', ['fetchRoom']),

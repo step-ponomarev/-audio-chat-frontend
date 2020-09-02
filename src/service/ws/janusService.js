@@ -18,20 +18,42 @@ class JanusService {
    * @returns {Promise<void>}
    */
   async connect() {
-    if (this.connection === null) {
-      this.connection = await this.api.createConnection();
-      this.session = await this.connection.createSession();
-      this.audioBridgePlugin = await this.session.attachPlugin("janus.plugin.audiobridge");
-    }
+    try {
+      if (this.connection === null) {
+        this.connection = await this.api.createConnection();
+        this.session = await this.connection.createSession();
+        this.audioBridgePlugin = await this.session.attachPlugin("janus.plugin.audiobridge");
+      }
 
-    return this.connection;
+      return this.connection;
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   async createAudioRoom() {
-    return (await this.audioBridgePlugin.create()).getPluginData();
+    try {
+      return (await this.audioBridgePlugin.create()).getPluginData();
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
+  async joinAudioRoom(id) {
+    try {
+      await this.audioBridgePlugin.join(id);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
 
+  async leaveAudioRoom() {
+    try {
+      this.audioBridgePlugin.leave();
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
 }
 
 const janusService = new JanusService(janus);
