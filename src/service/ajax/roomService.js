@@ -17,11 +17,17 @@ export async function getRoom(id) {
   }
 }
 
-export async function createRoom() {
+export async function createRoom(audioRoomId) {
   try {
-    const response = await fetch(`${ host }/api/room/create`);
+    const response = await fetch(`${ host }/api/room/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      body: audioRoomId
+    });
 
-    if (response.ok) return await response.text();
+    if (response.ok) return await response.json();
   } catch (e) {
     return Promise.reject(e);
   }

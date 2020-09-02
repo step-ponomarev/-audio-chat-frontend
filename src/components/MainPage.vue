@@ -5,6 +5,7 @@
 <script>
 import CreateRoomButton from "@/components/CreateRoomButton";
 import { createRoom } from "@/service/ajax/roomService";
+import janusService from "@/service/ws/janusService";
 
 export default {
   name: "MainPage",
@@ -12,9 +13,11 @@ export default {
   methods: {
     async createRoom() {
       try {
-        const roomId = await createRoom();
+        await janusService.connect();
 
-        await this.$router.push({ name: 'room', params: { id: roomId } });
+        const room = await createRoom((await janusService.createAudioRoom()).room);
+
+        await this.$router.push({ name: 'room', params: { id: room.id } });
       } catch (e) {
         console.error('Failure room creation');
       }

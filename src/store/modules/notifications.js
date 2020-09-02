@@ -25,11 +25,7 @@ const notifications = {
     [DELETE_NOTIFICATION](state, notification) {
       const index = state.notifications.indexOf(notification);
 
-      console.log(state.notifications)
-
       state.notifications.splice(index, 1);
-
-      console.log(state.notifications);
     }
   },
 }

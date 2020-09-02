@@ -12,6 +12,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import webSocketService from "@/service/ws/webSocketService";
+// import janusService from "@/service/ws/janusService";
 import Notifications from "@/components/notifications/Notifications";
 import GuestList from "@/components/guest/GuestList";
 import Chat from "@/components/chat/Chat";
@@ -19,8 +20,6 @@ import Chat from "@/components/chat/Chat";
 export default {
   name: "Room",
   components: { Chat, GuestList, Notifications },
-  data: () => ({}),
-  //TODO: Возможно имеет смысл сделать watch за роутом room вместо маунтед, но как поступать с дисконнектом?
   async mounted() {
     try {
       webSocketService.init(this.roomId);
@@ -30,7 +29,7 @@ export default {
       await this.fetchMessages(this.roomId);
     } catch (e) {
       //TODO: Сделать нотификацию тип
-      console.error('Failure fetching room');
+      console.error(e);
     }
   },
   destroyed() {
