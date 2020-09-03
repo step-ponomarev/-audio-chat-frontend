@@ -6,13 +6,20 @@
     <Notifications/>
     <Chat
         style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; box-sizing: border-box;"/>
+    <br/>
+    <span>
+        Микрофон {{ isMicOn ? "On" : "Off" }}
+    </span>
+    <br/>
+    <button @click="startAudioStreaming">
+        Микрофон
+    </button>
 </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import webSocketService from "@/service/ws/webSocketService";
-// import janusService from "@/service/ws/janusService";
 import Notifications from "@/components/notifications/Notifications";
 import GuestList from "@/components/guest/GuestList";
 import Chat from "@/components/chat/Chat";
@@ -20,6 +27,9 @@ import janusService from "@/service/ws/janusService";
 
 export default {
   name: "Room",
+  data: () => ({
+    isMicOn: false
+  }),
   components: { Chat, GuestList, Notifications },
   async mounted() {
     try {
@@ -44,6 +54,14 @@ export default {
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('message', ['fetchMessages']),
+    async startAudioStreaming() {
+      this.isMicOn = !this.isMicOn;
+
+      if (this.isMicOn) {
+        const answ = await janusService.openAndSendAudioStream();
+        await janusService.configureAudioBridgePlugin({muted: false}, answ)
+      }
+    }
   },
   computed: {
     ...mapGetters('room', ['room']),
