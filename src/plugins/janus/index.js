@@ -1,8 +1,8 @@
-import Janus from './janus.js';
+import { Janus } from 'janus-gateway';
 import adapter from 'webrtc-adapter';
 
-const janus = () => Janus.useDefaultDependencies({
-  adapter,
+Janus.init({
+  debug: true,
+  dependencies: Janus.useDefaultDependencies({ adapter }),
+  callback: () => {}
 });
-
-export default janus;
