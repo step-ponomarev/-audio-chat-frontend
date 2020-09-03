@@ -32,19 +32,19 @@ export default {
   }),
   components: { Chat, GuestList, Notifications },
   async mounted() {
-    try {
-      webSocketService.init(this.roomId);
-
-      await this.fetchRoom(this.roomId);
-      await this.fetchGuests(this.roomId);
-      await this.fetchMessages(this.roomId);
-
-      await janusService.connect();
-      await janusService.joinAudioRoom(this.room.audioRoomId);
-    } catch (e) {
-      //TODO: Сделать нотификацию тип
-      console.error(e);
-    }
+    // try {
+    //   webSocketService.init(this.roomId);
+    //
+    //   await this.fetchRoom(this.roomId);
+    //   await this.fetchGuests(this.roomId);
+    //   await this.fetchMessages(this.roomId);
+    //
+    //   await janusService.connect();
+    //   await janusService.joinAudioRoom(this.room.audioRoomId);
+    // } catch (e) {
+    //   //TODO: Сделать нотификацию тип
+    //   console.error(e);
+    // }
   },
   destroyed() {
     webSocketService.disconnect();
@@ -55,11 +55,16 @@ export default {
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('message', ['fetchMessages']),
     async startAudioStreaming() {
-      this.isMicOn = !this.isMicOn;
+      try {
+        this.isMicOn = !this.isMicOn;
 
-      if (this.isMicOn) {
-        const answ = await janusService.openAndSendAudioStream();
-        await janusService.configureAudioBridgePlugin({muted: false}, answ)
+        if (this.isMicOn) {
+          // eslint-disable-next-line no-unused-vars
+          const answ = await janusService.openAndSendAudioStream();
+          // await janusService.configureAudioBridgePlugin({muted: false}, answ)
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
   },

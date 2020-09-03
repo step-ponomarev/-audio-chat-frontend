@@ -1,1 +1,3 @@
-import './janus';
+import janus from './janus';
+
+console.error(janus)

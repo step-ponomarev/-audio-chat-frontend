@@ -3,19 +3,19 @@ import janus from "@/plugins/janus";
 const iseServers = {
   'iceServers': [
     { 'urls': 'stun:stun.l.google.com:19302' },
-    // { 'urls': 'stun:stun1.l.google.com:19302' },
-    // { 'urls': 'stun:stun2.l.google.com:19302' },
-    // { 'urls': 'stun:stun3.l.google.com:19302' },
-    // { 'urls': 'stun:stun4.l.google.com:19302' },
-    // { 'urls': 'stun:stun01.sipphone.com' },
-    // { 'urls': 'stun:stun.rixtelecom.se' },
-    // { 'urls': 'stun:stun.schlund.de' },
-    // { 'urls': 'stun:stun.softjoys.com' },
-    // { 'urls': 'stun:stun.voipbuster.com' },
-    // { 'urls': 'stun:stun.voxgratia.org' },
-    // { 'urls': 'stun:stun.voipstunt.com' },
-    // { 'urls': 'stun:stun.voiparound.com' },
-    // { 'urls': 'stun:stun.xten.com' },
+    { 'urls': 'stun:stun1.l.google.com:19302' },
+    { 'urls': 'stun:stun2.l.google.com:19302' },
+    { 'urls': 'stun:stun3.l.google.com:19302' },
+    { 'urls': 'stun:stun4.l.google.com:19302' },
+    { 'urls': 'stun:stun01.sipphone.com' },
+    { 'urls': 'stun:stun.rixtelecom.se' },
+    { 'urls': 'stun:stun.schlund.de' },
+    { 'urls': 'stun:stun.softjoys.com' },
+    { 'urls': 'stun:stun.voipbuster.com' },
+    { 'urls': 'stun:stun.voxgratia.org' },
+    { 'urls': 'stun:stun.voipstunt.com' },
+    { 'urls': 'stun:stun.voiparound.com' },
+    { 'urls': 'stun:stun.xten.com' },
   ]
 }
 
@@ -42,16 +42,23 @@ class JanusService {
       if (this.connection === null) {
         this.connection = await this.api.createConnection();
         this.session = await this.connection.createSession();
+
         this.audioBridgePlugin = await this.session.attachPlugin("janus.plugin.audiobridge");
-        // this.audioBridgePlugin.createPeerConnection(iseServers);
+        this.audioBridgePlugin.createPeerConnection(iseServers);
+        await this.audioBridgePlugin.createOffer();
 
         // await this.audioBridgePlugin.createPeerConnection(iseServers);
 
         // this.audioBridgePlugin.getPeerConnection().ontrack = (e) => console.log(e);
         //
 
-        this.audioBridgePlugin.on('message', async (stream, jp) => {
-          console.error("KEK", stream, jp);
+        this.audioBridgePlugin.on('message', async (response) => {
+          const jsep = response.get('jsep');
+
+          if (jsep) {
+            console.log(jsep);
+            await this.audioBridgePlugin.setRemoteSDP(jsep);
+          }
         });
 
         this.audioBridgePlugin.on('remotestream', async (stream) => {
@@ -103,6 +110,7 @@ class JanusService {
    */
   async configureAudioBridgePlugin(config = { muted: false }, jsep) {
     try {
+      console.log(jsep)
       return await this.audioBridgePlugin.configure(config, jsep);
     } catch (e) {
       return Promise.reject(e);
@@ -118,9 +126,7 @@ class JanusService {
     try {
       const stream = await this.audioBridgePlugin.getUserMedia({ audio: true });
 
-      return await this.audioBridgePlugin.offerStream(stream, {
-        "optional": [{ "DtlsSrtpKeyAgreement": true }]
-      }, iseServers);
+      await this.audioBridgePlugin.setRemoteSDP(await this.audioBridgePlugin.offerStream(stream, {}, iseServers));
     } catch (e) {
       return Promise.reject(e);
     }

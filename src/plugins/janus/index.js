@@ -1,7 +1,8 @@
-import Janus from 'janus-gateway-js';
+import Janus from './janus.js';
+import adapter from 'webrtc-adapter';
 
-const janus = new Janus.Client('ws://localhost:8188', {
-  keepalive: 'true'
+const janus = () => Janus.useDefaultDependencies({
+  adapter,
 });
 
 export default janus;
