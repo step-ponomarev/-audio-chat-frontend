@@ -1,5 +1,11 @@
 import { Janus } from 'janus-gateway';
 
+import { onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed } from "@/service/ws/jenusCallbacks";
+
+const PLUGIN = {
+  AUDIO_BRIDGE: "janus.plugin.audiobridge"
+}
+
 const iseServers = {
   'iceServers': [
     { 'urls': 'stun:stun.l.google.com:19302' },
@@ -39,11 +45,61 @@ class JanusService {
       error,
       destroyed
     });
+  }
 
-    console.error(this.janus);
+  attachPlugin({ roomId }) {
+    this.janus.attach(
+      {
+        plugin: PLUGIN.AUDIO_BRIDGE,
+        success: function (pluginHandle) {
+          // eslint-disable-next-line no-unused-vars
+          const audioBridge = pluginHandle;
+
+          joinRoom(pluginHandle, roomId);
+        }
+        ,
+        error
+          (cause) {
+          console.log(cause);
+        }
+        ,
+        consentDialog(on) {
+          console.log(on);
+        }
+        ,
+        onmessage: function (msg, jsep) {
+          console.log(msg);
+          console.log(jsep);
+        }
+        ,
+        onlocalstream: function (stream) {
+          console.log(stream);
+        }
+        ,
+        onremotestream: function (stream) {
+          console.log(stream)
+        }
+        ,
+        oncleanup: function () {
+        }
+        ,
+        detached: function () {
+        }
+      })
+    ;
   }
 }
 
-const janusService = new JanusService();
+function joinRoom(plugin, id) {
+  const message = {
+    request: "join",
+    room: id
+  }
+
+  plugin.send({ message });
+
+}
+
+const janusService = new JanusService(onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed);
 
 export default janusService;

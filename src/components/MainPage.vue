@@ -5,7 +5,6 @@
 <script>
 import CreateRoomButton from "@/components/CreateRoomButton";
 import { createRoom } from "@/service/ajax/roomService";
-import janusService from "@/service/ws/janusService";
 
 export default {
   name: "MainPage",
@@ -13,9 +12,7 @@ export default {
   methods: {
     async createRoom() {
       try {
-        await janusService.connect();
-
-        const room = await createRoom((await janusService.createAudioRoom()).room);
+        const room = await createRoom();
 
         await this.$router.push({ name: 'room', params: { id: room.id } });
       } catch (e) {

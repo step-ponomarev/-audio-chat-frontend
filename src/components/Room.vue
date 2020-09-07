@@ -32,23 +32,22 @@ export default {
   }),
   components: { Chat, GuestList, Notifications },
   async mounted() {
-    // try {
-    //   webSocketService.init(this.roomId);
-    //
-    //   await this.fetchRoom(this.roomId);
-    //   await this.fetchGuests(this.roomId);
-    //   await this.fetchMessages(this.roomId);
-    //
-    //   await janusService.connect();
-    //   await janusService.joinAudioRoom(this.room.audioRoomId);
-    // } catch (e) {
-    //   //TODO: Сделать нотификацию тип
-    //   console.error(e);
-    // }
+    try {
+      const id = this.roomId;
+      webSocketService.init(id);
+
+
+      await this.fetchRoom(id);
+      await this.fetchGuests(id);
+      await this.fetchMessages(id);
+
+      janusService.attachPlugin({ roomIdf: this.roomId });
+    } catch (e) {
+      console.error(e);
+    }
   },
   destroyed() {
     webSocketService.disconnect();
-    janusService.leaveAudioRoom();
   },
   methods: {
     ...mapActions('room', ['fetchRoom']),
