@@ -36,12 +36,11 @@ export default {
       const id = this.roomId;
       webSocketService.init(id);
 
-
       await this.fetchRoom(id);
       await this.fetchGuests(id);
       await this.fetchMessages(id);
 
-      janusService.attachPlugin({ roomIdf: this.roomId });
+      janusService.attachPlugin({ roomId: this.roomId });
     } catch (e) {
       console.error(e);
     }

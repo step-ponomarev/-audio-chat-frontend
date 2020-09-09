@@ -55,12 +55,14 @@ class JanusService {
           // eslint-disable-next-line no-unused-vars
           const audioBridge = pluginHandle;
 
+          console.error(audioBridge);
+
           joinRoom(pluginHandle, roomId);
         }
         ,
         error
           (cause) {
-          console.log(cause);
+          console.error(cause);
         }
         ,
         consentDialog(on) {
@@ -68,8 +70,7 @@ class JanusService {
         }
         ,
         onmessage: function (msg, jsep) {
-          console.log(msg);
-          console.log(jsep);
+          console.log(msg, jsep);
         }
         ,
         onlocalstream: function (stream) {
@@ -97,7 +98,6 @@ function joinRoom(plugin, id) {
   }
 
   plugin.send({ message });
-
 }
 
 const janusService = new JanusService(onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed);
