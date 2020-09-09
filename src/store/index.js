@@ -4,10 +4,12 @@ import room from "@/store/modules/room";
 import guest from "@/store/modules/guest";
 import notifications from "@/store/modules/notifications";
 import message from "@/store/modules/message";
+import user from "@/store/modules/user";
 
 Vue.use(Vuex);
 
 const modules = {
+  user,
   room,
   guest,
   message,

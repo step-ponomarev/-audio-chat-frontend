@@ -3,19 +3,16 @@ import { guestArrayToObj } from "@/helpers/serviceHelpers";
 import mutations from "@/store/mutations";
 import Vue from "vue";
 
-const { SET_GUESTS, REMOVE_GUEST, ADD_GUEST, SET_USER } = mutations
+const { SET_GUESTS, REMOVE_GUEST, ADD_GUEST } = mutations
 
 const guest = {
   namespaced: true,
   state: {
-    guests: {},
-    user: {}
+    guests: {}
   },
   getters: {
     guestList: ({ guests }) => Object.values(guests),
-    guestListForRender: ({ guests, user }) => Object.values(guests).filter(guest => guest.id !== user.id),
     guestById: ({ guests }) => id => guests[id],
-    user: ({ user }) => user
   },
   actions: {
     async fetchGuests({ commit }, roomId) {
@@ -36,9 +33,6 @@ const guest = {
     removeGuest({ commit }, guestId) {
       commit(REMOVE_GUEST, guestId);
     },
-    setUser({ commit }, user) {
-      commit(SET_USER, user);
-    }
   },
   mutations: {
     [SET_GUESTS](state, guestsObj) {
@@ -49,9 +43,6 @@ const guest = {
     },
     [REMOVE_GUEST](state, guestId) {
       Vue.delete(state.guests, guestId);
-    },
-    [SET_USER](state, user) {
-      state.user = user;
     }
   },
 }

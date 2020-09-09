@@ -1,6 +1,6 @@
 <template>
     <div class="guestList">
-        <GuestItem v-for="(guest) in guestListForRender" :guest="guest" :key="guest.sessionId"/>
+        <GuestItem v-for="(guest) in guestList.filter(g => g.id !== user.id)" :guest="guest" :key="guest.sessionId"/>
     </div>
 </template>
 
@@ -12,7 +12,8 @@ export default {
   name: "GuestList",
   components: { GuestItem },
   computed: {
-    ...mapGetters('guest', ['guestListForRender']),
+    ...mapGetters('guest', ['guestList']),
+    ...mapGetters('user', ['user']),
   }
 }
 </script>

@@ -48,9 +48,9 @@ class JanusService {
       error,
       destroyed
     });
-    this.audioBridge = null;
-    this.audioElement = null;
-    this.isWebRtcUp = false;
+    this._audioBridge = null;
+    this._audioElement = null;
+    this._isWebRtcUp = false;
   }
 
   attachPlugin({ roomId }) {
@@ -58,7 +58,7 @@ class JanusService {
       {
         plugin: PLUGIN.AUDIO_BRIDGE,
         success: (pluginHandle) => {
-          this.audioBridge = pluginHandle;
+          this._audioBridge = pluginHandle;
           this.joinRoom(pluginHandle, roomId);
         },
         error
@@ -78,7 +78,7 @@ class JanusService {
           console.error("Local", stream);
         },
         onremotestream: (stream) => {
-          this.audioElement.srcObject = stream;
+          this._audioElement.srcObject = stream;
           //Janus.attachMediaStream(this.audioElement, stream);
         },
         oncleanup: () => {
@@ -100,16 +100,16 @@ class JanusService {
   }
 
   startAudioTranslation() {
-    if (this.audioBridge === null) {
+    if (this._audioBridge === null) {
       return;
     }
 
-    this.audioBridge.createOffer(
+    this._audioBridge.createOffer(
       {
         media: { video: false, audio: true },
         success: (jsep) => {
           const publish = { "request": "configure", "muted": true };
-          this.audioBridge.send({ "message": publish, "jsep": jsep });
+          this._audioBridge.send({ "message": publish, "jsep": jsep });
         },
         error: (error) => {
           console.error(error);
@@ -122,18 +122,18 @@ class JanusService {
    * @param {boolean} isMicActive value to configure microphone state
    */
   configureMicrophoneSettings(isMicActive) {
-    if (this.audioBridge === null) {
+    if (this._audioBridge === null) {
       return;
     }
 
     const muted = !isMicActive;
     const publish = { "request": "configure", "muted": muted };
 
-    this.audioBridge.send({ "message": publish });
+    this._audioBridge.send({ "message": publish });
   }
 
   setAudioElement(element) {
-    this.audioElement = element;
+    this._audioElement = element;
   }
 
   /**
@@ -154,11 +154,11 @@ class JanusService {
   }
 
   _handleJoinedEvent() {
-    if (this.isWebRtcUp) {
+    if (this._isWebRtcUp) {
       return;
     }
 
-    this.isWebRtcUp = true;
+    this._isWebRtcUp = true;
     this.startAudioTranslation();
   }
 
@@ -167,7 +167,7 @@ class JanusService {
       return;
     }
 
-    this.audioBridge.handleRemoteJsep({ jsep: jsep });
+    this._audioBridge.handleRemoteJsep({ jsep: jsep });
   }
 }
 

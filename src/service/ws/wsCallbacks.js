@@ -31,6 +31,6 @@ export async function onMessageReceived(message) {
 export async function getCurrentUser(usr) {
   const user = await JSON.parse(usr.body);
 
-  dispatch('guest/setUser', user);
+  dispatch('user/setUser', user);
   dispatch('guest/addGuest', user);
 }

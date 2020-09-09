@@ -21,7 +21,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import webSocketService from "@/service/ws/webSocketService";
+import webSocketService from "@/service/ws/roomSocketService";
 import Notifications from "@/components/notifications/Notifications";
 import GuestList from "@/components/guest/GuestList";
 import Chat from "@/components/chat/Chat";
@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     ...mapGetters('room', ['room']),
-    ...mapGetters('guest', ['user']),
+    ...mapGetters('user', ['user']),
     roomId() {
       return this.$route.params.id;
     }
