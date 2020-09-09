@@ -1,4 +1,7 @@
 import { Janus } from 'janus-gateway';
+// import store from "@/store";
+//
+// const {getters} = store;
 
 import { onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed } from "@/service/ws/jenusCallbacks";
 
@@ -45,59 +48,127 @@ class JanusService {
       error,
       destroyed
     });
+    this.audioBridge = null;
+    this.audioElement = null;
+    this.isWebRtcUp = false;
   }
 
   attachPlugin({ roomId }) {
     this.janus.attach(
       {
         plugin: PLUGIN.AUDIO_BRIDGE,
-        success: function (pluginHandle) {
-          // eslint-disable-next-line no-unused-vars
-          const audioBridge = pluginHandle;
-
-          console.error(audioBridge);
-
-          joinRoom(pluginHandle, roomId);
-        }
-        ,
+        success: (pluginHandle) => {
+          this.audioBridge = pluginHandle;
+          this.joinRoom(pluginHandle, roomId);
+        },
         error
           (cause) {
           console.error(cause);
-        }
-        ,
+        },
         consentDialog(on) {
           console.log(on);
-        }
-        ,
-        onmessage: function (msg, jsep) {
-          console.log(msg, jsep);
-        }
-        ,
-        onlocalstream: function (stream) {
-          console.log(stream);
-        }
-        ,
-        onremotestream: function (stream) {
-          console.log(stream)
-        }
-        ,
-        oncleanup: function () {
-        }
-        ,
-        detached: function () {
-        }
-      })
-    ;
-  }
-}
+        },
+        onmessage: (msg, jsep) => {
+          const event = msg["audiobridge"];
 
-function joinRoom(plugin, id) {
-  const message = {
-    request: "join",
-    room: id
+          this._handleEvent(event);
+          this._handleJsep(jsep);
+        },
+        onlocalstream: (stream) => {
+          console.error("Local", stream);
+        },
+        onremotestream: (stream) => {
+          this.audioElement.srcObject = stream;
+          //Janus.attachMediaStream(this.audioElement, stream);
+        },
+        oncleanup: () => {
+
+        },
+        detached: () => {
+
+        }
+      });
   }
 
-  plugin.send({ message });
+  joinRoom(plugin, id) {
+    const message = {
+      request: "join",
+      room: id
+    }
+
+    plugin.send({ message });
+  }
+
+  startAudioTranslation() {
+    if (this.audioBridge === null) {
+      return;
+    }
+
+    this.audioBridge.createOffer(
+      {
+        media: { video: false, audio: true },
+        success: (jsep) => {
+          const publish = { "request": "configure", "muted": true };
+          this.audioBridge.send({ "message": publish, "jsep": jsep });
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+  }
+
+  /**
+   *
+   * @param {boolean} isMicActive value to configure microphone state
+   */
+  configureMicrophoneSettings(isMicActive) {
+    if (this.audioBridge === null) {
+      return;
+    }
+
+    const muted = !isMicActive;
+    const publish = { "request": "configure", "muted": muted };
+
+    this.audioBridge.send({ "message": publish });
+  }
+
+  setAudioElement(element) {
+    this.audioElement = element;
+  }
+
+  /**
+   *
+   * @param {String} event
+   * @private
+   */
+  _handleEvent(event) {
+    if (event === undefined || event === null) {
+      return;
+    }
+
+    switch (event) {
+      case "joined":
+        this._handleJoinedEvent();
+        break;
+    }
+  }
+
+  _handleJoinedEvent() {
+    if (this.isWebRtcUp) {
+      return;
+    }
+
+    this.isWebRtcUp = true;
+    this.startAudioTranslation();
+  }
+
+  _handleJsep(jsep) {
+    if (jsep === undefined || jsep === null) {
+      return;
+    }
+
+    this.audioBridge.handleRemoteJsep({ jsep: jsep });
+  }
 }
 
 const janusService = new JanusService(onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed);

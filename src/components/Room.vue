@@ -1,5 +1,7 @@
 <template>
 <div>
+    <audio ref="audioZone" autoplay/>
+
     {{user.name }}
     <GuestList/>
     <router-link :to="{ name: 'main'}">Выйти</router-link>
@@ -11,7 +13,7 @@
         Микрофон {{ isMicOn ? "On" : "Off" }}
     </span>
     <br/>
-    <button @click="startAudioStreaming">
+    <button @click="changeMicState">
         Микрофон
     </button>
 </div>
@@ -40,7 +42,9 @@ export default {
       await this.fetchGuests(id);
       await this.fetchMessages(id);
 
+      janusService.setAudioElement(this.$refs.audioZone);
       janusService.attachPlugin({ roomId: this.roomId });
+      janusService.configureMicrophoneSettings(this.isMicOn);
     } catch (e) {
       console.error(e);
     }
@@ -48,22 +52,17 @@ export default {
   destroyed() {
     webSocketService.disconnect();
   },
+  watch: {
+    isMicOn(value) {
+      janusService.configureMicrophoneSettings(value);
+    }
+  },
   methods: {
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('message', ['fetchMessages']),
-    async startAudioStreaming() {
-      try {
-        this.isMicOn = !this.isMicOn;
-
-        if (this.isMicOn) {
-          // eslint-disable-next-line no-unused-vars
-          const answ = await janusService.openAndSendAudioStream();
-          // await janusService.configureAudioBridgePlugin({muted: false}, answ)
-        }
-      } catch (e) {
-        console.error(e)
-      }
+    async changeMicState() {
+      this.isMicOn = !this.isMicOn;
     }
   },
   computed: {
