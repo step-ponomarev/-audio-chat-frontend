@@ -35,7 +35,8 @@ class RoomSocketService {
   /**
    *
    * @param {String} roomId
-   * @param {String} msg
+   * @param {String} guestId
+   * @param msg
    */
   sendMessage(roomId, guestId, msg) {
     if (this._stompClient === null) {

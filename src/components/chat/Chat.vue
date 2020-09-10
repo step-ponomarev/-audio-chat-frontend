@@ -17,7 +17,7 @@ export default {
   methods: {
     sendMessage(msg) {
       try {
-        roomSocketService.sendMessage(this.roomId, msg);
+        roomSocketService.sendMessage(this.roomId, this.userId, msg);
       } catch (e) {
         console.error(e);
       }
@@ -25,8 +25,12 @@ export default {
   },
   computed: {
     ...mapGetters('room', ['room']),
+    ...mapGetters('user', ['user']),
     roomId() {
       return this.room.id;
+    },
+    userId() {
+      return this.user.id;
     }
   }
 }
