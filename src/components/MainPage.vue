@@ -1,6 +1,11 @@
 <template>
     <div class="mainPage">
+        <header>
+        <h1>Создай комнату!</h1>
+    </header>
+    <main>
         <CreateRoomButton @handleClickButton="createRoom" class="centered"/>
+    </main>
     </div>
 </template>
 
@@ -27,13 +32,13 @@ export default {
 
 <style scoped>
 .mainPage {
-    display: grid;
-    justify-content: center;
-    align-content: center;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
 }
 
+h1 {
+    margin: 0;
+}
 
 </style>

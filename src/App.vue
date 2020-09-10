@@ -35,4 +35,10 @@ export default {
     background-color: white;
     box-sizing: border-box;
   }
+
+  .centered {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+  }
 </style>
