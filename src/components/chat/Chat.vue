@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="ui-element">
         <MessageList/>
         <input-area @handleSendMessage="sendMessage"/>
     </div>

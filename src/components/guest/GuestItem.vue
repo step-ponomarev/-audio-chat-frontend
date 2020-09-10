@@ -1,10 +1,8 @@
 <template>
     <div class="guest-item">
         <div class="avatar">
-            <img src="@/assets/anon-avatar.png" alt="guest avatar"/>
-            {{ guest.speaking ? "LOL" : "KEK" }}
+            <img src="@/assets/anon-avatar.png" alt="guest avatar" :class="micIsActive" class="guest-Avatar"/>
         </div>
-        {{ guest.name }}
     </div>
 </template>
 
@@ -15,6 +13,14 @@ export default {
     guest: {
       Type: Object,
       required: true
+    }
+  },
+  computed: {
+    micIsActive() {
+      return {
+        "micActive": this.guest.speaking,
+        "micOff": !this.guest.speaking
+      }
     }
   }
 }
@@ -30,6 +36,18 @@ export default {
 
     .avatar {
         max-width: 50px;
+    }
+
+    .micActive {
+        border: 3px solid green;
+        height: 20px;
+        width: 20px;
+    }
+
+    .micOff {
+        border: 3px solid red;
+        height: 20px;
+        width: 20px;
     }
 
     .avatar > img {

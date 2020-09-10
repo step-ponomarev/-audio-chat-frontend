@@ -30,5 +30,6 @@ export default {
         align-items: flex-start;
         padding: 1em;
         max-height: 250px;
+        box-sizing: border-box;
     }
 </style>
