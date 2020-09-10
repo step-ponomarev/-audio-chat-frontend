@@ -3,7 +3,7 @@ import { guestArrayToObj } from "@/helpers/serviceHelpers";
 import mutations from "@/store/mutations";
 import Vue from "vue";
 
-const { SET_GUESTS, REMOVE_GUEST, ADD_GUEST } = mutations
+const { SET_GUESTS, REMOVE_GUEST, ADD_GUEST, SET_GUEST_VOICE_STATE } = mutations
 
 const guest = {
   namespaced: true,
@@ -12,7 +12,6 @@ const guest = {
   },
   getters: {
     guestList: ({ guests }) => Object.values(guests),
-    guestById: ({ guests }) => id => guests[id],
   },
   actions: {
     async fetchGuests({ commit }, roomId) {
@@ -33,6 +32,9 @@ const guest = {
     removeGuest({ commit }, guestId) {
       commit(REMOVE_GUEST, guestId);
     },
+    setVoiceState({ commit }, voiceState) {
+      commit(SET_GUEST_VOICE_STATE, voiceState);
+    }
   },
   mutations: {
     [SET_GUESTS](state, guestsObj) {
@@ -43,6 +45,12 @@ const guest = {
     },
     [REMOVE_GUEST](state, guestId) {
       Vue.delete(state.guests, guestId);
+    },
+    [SET_GUEST_VOICE_STATE](state, { id, voiceState }) {
+      const guest = { ...state.guests[id] };
+      guest.speaking = voiceState;
+
+      Vue.set(state.guests, id, guest);
     }
   },
 }

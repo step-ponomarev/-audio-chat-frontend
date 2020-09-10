@@ -35,22 +35,25 @@ export default {
   components: { Chat, GuestList, Notifications },
   async mounted() {
     try {
-      const id = this.roomId;
-      webSocketService.init(id);
+      const roomId = this.roomId;
 
-      await this.fetchRoom(id);
-      await this.fetchGuests(id);
-      await this.fetchMessages(id);
+      await this.createUser(roomId);
+      await this.fetchRoom(roomId);
+      await this.fetchGuests(roomId);
+      await this.fetchMessages(roomId);
+
+      const userId = this.user.id;
+      webSocketService.init(roomId, userId);
 
       janusService.setAudioElement(this.$refs.audioZone);
-      janusService.attachPlugin({ roomId: this.roomId });
+      janusService.attachPlugin({ roomId, userId: this.user.id });
       janusService.configureMicrophoneSettings(this.isMicOn);
     } catch (e) {
       console.error(e);
     }
   },
   destroyed() {
-    webSocketService.disconnect();
+    webSocketService.disconnect(this.user.id);
   },
   watch: {
     isMicOn(value) {
@@ -58,8 +61,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('room', ['fetchRoom']),
+    ...mapActions('user', ['createUser']),
     ...mapActions('guest', ['fetchGuests']),
+    ...mapActions('room', ['fetchRoom']),
     ...mapActions('message', ['fetchMessages']),
     async changeMicState() {
       this.isMicOn = !this.isMicOn;

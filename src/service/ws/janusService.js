@@ -1,7 +1,5 @@
 import { Janus } from 'janus-gateway';
-// import store from "@/store";
-//
-// const {getters} = store;
+import store from "@/store";
 
 import { onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed } from "@/service/ws/jenusCallbacks";
 
@@ -53,13 +51,13 @@ class JanusService {
     this._isWebRtcUp = false;
   }
 
-  attachPlugin({ roomId }) {
+  attachPlugin({ roomId, userId }) {
     this.janus.attach(
       {
         plugin: PLUGIN.AUDIO_BRIDGE,
         success: (pluginHandle) => {
           this._audioBridge = pluginHandle;
-          this.joinRoom(pluginHandle, roomId);
+          this._joinRoom(pluginHandle, { roomId, userId });
         },
         error
           (cause) {
@@ -69,16 +67,16 @@ class JanusService {
           console.log(on);
         },
         onmessage: (msg, jsep) => {
-          const event = msg["audiobridge"];
-
-          this._handleEvent(event);
+          this._handleEvent(msg);
           this._handleJsep(jsep);
         },
         onlocalstream: (stream) => {
+          //TODO: Убрать
           console.error("Local", stream);
         },
         onremotestream: (stream) => {
           this._audioElement.srcObject = stream;
+          //TODO: прочитать про то, как метод работает
           //Janus.attachMediaStream(this.audioElement, stream);
         },
         oncleanup: () => {
@@ -88,15 +86,6 @@ class JanusService {
 
         }
       });
-  }
-
-  joinRoom(plugin, id) {
-    const message = {
-      request: "join",
-      room: id
-    }
-
-    plugin.send({ message });
   }
 
   startAudioTranslation() {
@@ -136,12 +125,24 @@ class JanusService {
     this._audioElement = element;
   }
 
+  _joinRoom(plugin, { roomId, userId }) {
+    const message = {
+      request: "join",
+      room: roomId,
+      id: userId
+    }
+
+    plugin.send({ message });
+  }
+
   /**
    *
    * @param {String} event
    * @private
    */
-  _handleEvent(event) {
+  _handleEvent(msg) {
+    const event = msg['audiobridge'];
+
     if (event === undefined || event === null) {
       return;
     }
@@ -150,6 +151,10 @@ class JanusService {
       case "joined":
         this._handleJoinedEvent();
         break;
+      case "event": {
+        this._handleChangedMicState(msg);
+        break;
+      }
     }
   }
 
@@ -168,6 +173,24 @@ class JanusService {
     }
 
     this._audioBridge.handleRemoteJsep({ jsep: jsep });
+  }
+
+  _handleChangedMicState(msg) {
+    const guests = msg['participants'];
+
+    if (guests === null || guests === undefined) {
+      return;
+    }
+
+    const { dispatch } = store;
+    guests.forEach(g => {
+      const voiceState = {
+        id: g.id,
+        voiceState: !g.muted
+      }
+
+      dispatch('guest/setVoiceState', voiceState);
+    });
   }
 }
 

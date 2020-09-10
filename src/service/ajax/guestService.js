@@ -16,3 +16,27 @@ export async function getGuests(roomId) {
     return Promise.reject(e);
   }
 }
+
+export async function createGuest(roomId) {
+  try {
+    const response = await fetch(`${ host }/api/guest/room/${ roomId }/create`);
+
+    if (response.ok) return await response.json();
+
+    throw Error(response.statusText);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+export async function removeGuest(guestId) {
+  try {
+    const response = await fetch(`${ host }/api/guest/${ guestId }/remove`);
+
+    if (!response.ok) {
+      throw new Error("Error removing guest");
+    }
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}

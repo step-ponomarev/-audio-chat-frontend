@@ -1,8 +1,7 @@
 import store from "@/store";
 
-const { dispatch } = store;
-
 export async function onUserJoined(guest) {
+  const { dispatch } = store;
   const user = await JSON.parse(guest.body);
 
   dispatch("guest/addGuest", user);
@@ -13,6 +12,7 @@ export async function onUserJoined(guest) {
 }
 
 export async function onUserLeaved(guest) {
+  const { dispatch } = store;
   const user = await JSON.parse(guest.body);
 
   dispatch('guest/removeGuest', user.id);
@@ -23,14 +23,8 @@ export async function onUserLeaved(guest) {
 }
 
 export async function onMessageReceived(message) {
+  const { dispatch } = store;
   const msg = await JSON.parse(message.body);
 
-  dispatch('message/addMessage', msg);
-}
-
-export async function getCurrentUser(usr) {
-  const user = await JSON.parse(usr.body);
-
-  dispatch('user/setUser', user);
-  dispatch('guest/addGuest', user);
+  await dispatch('message/addMessage', msg);
 }

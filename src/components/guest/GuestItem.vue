@@ -2,6 +2,7 @@
     <div class="guest-item">
         <div class="avatar">
             <img src="@/assets/anon-avatar.png" alt="guest avatar"/>
+            {{ guest.speaking ? "LOL" : "KEK" }}
         </div>
         {{ guest.name }}
     </div>
