@@ -44,5 +44,6 @@ export default {
 <style scoped>
     .messageList {
         height: 250px;
+        background-color: #ffffff;
     }
 </style>

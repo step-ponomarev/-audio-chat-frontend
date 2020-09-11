@@ -25,7 +25,7 @@ export default {
   computed: {
     ...mapGetters('user', ['user']),
     bgColor() {
-      return this.user.id === this.message.senderId ? 'amber-7' : 'light-green-7';
+      return this.user.id === this.message.senderId ? 'amber-7' : 'blue-7';
     },
     fadeStyle() {
       return {

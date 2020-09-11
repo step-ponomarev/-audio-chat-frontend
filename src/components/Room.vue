@@ -1,6 +1,6 @@
 <template>
 <div class="room">
-    <h1>ЭТО ПРОТОТИП ТУТ НЕТ НИКАКОГО ДИЗАЙНА!!</h1>
+    <h3>ЭТО ПРОТОТИП ТУТ НЕТ НИКАКОГО ДИЗАЙНА!!</h3>
     <audio ref="audioZone" autoplay/>
     <UserPane :user="user" @handleChangeMicState="changeMicState"/>
     <GuestList v-if="guestList.filter(g => g.id !== user.id).length"/>

@@ -1,5 +1,5 @@
 <template>
-    <q-input filled v-model="message" @keypress.enter="onEnter" bg-color="light-green-5"/>
+    <q-input filled class="chat-input" v-model="message" @keypress.enter="onEnter" placeholder="Сообщение..."/>
 </template>
 <script>
 

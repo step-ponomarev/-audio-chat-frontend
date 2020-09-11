@@ -1,19 +1,27 @@
 <template>
-    <div class="ui-element">
-        <MessageList/>
-        <InputArea @handleSendMessage="sendMessage"/>
+    <div class="chat">
+        <ChatTools @handleClickHideChat="hideChat"/>
+        <div v-if="!hidden" class="ui-element user-chat">
+            <MessageList/>
+            <InputArea @handleSendMessage="sendMessage"/>
+        </div>
     </div>
 </template>
 
 <script>
+//TODO: Отделить тулзы чата в отдельные компоненты
 import roomSocketService from "@/service/ws/roomSocketService";
 import InputArea from "@/components/chat/InputArea";
 import MessageList from "@/components/chat/MessageList";
 import { mapGetters } from 'vuex';
+import ChatTools from "@/components/chat/tools/ChatTools";
 
 export default {
   name: "Chat",
-  components: { MessageList, InputArea },
+  components: { ChatTools, MessageList, InputArea },
+  data: () => ({
+    hidden: false
+  }),
   methods: {
     sendMessage(msg) {
       try {
@@ -21,6 +29,9 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+    hideChat() {
+      this.hidden = !this.hidden;
     }
   },
   computed: {
@@ -37,5 +48,25 @@ export default {
 </script>
 
 <style scoped>
+    .chat {
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 2000;
+    }
+
+    .user-chat {
+        animation-name: bounceOutUp;
+        animation-duration: 200ms;
+    }
+
+    @keyframes bounceOutUp {
+        0% {
+            transform: translateY(200%);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
 
 </style>
