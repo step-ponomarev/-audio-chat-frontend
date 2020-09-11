@@ -1,4 +1,4 @@
-import { createGuest } from "@/service/ajax/guestService";
+import { createGuest, getGuest } from "@/service/ajax/guestService";
 import mutations from "@/store/mutations";
 import Vue from 'vue';
 
@@ -18,7 +18,20 @@ const user = {
       try {
         const addedGuest = await createGuest(roomId);
 
+        localStorage.setItem(`${ roomId }_USER_ID`, addedGuest.id);
+
         dispatch('setUser', { ...addedGuest, speaking: false });
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    async fetchUser({ dispatch }, userId) {
+      try {
+        const currentUser = await getGuest(userId);
+
+        if (currentUser !== null) {
+          dispatch('setUser', { ...currentUser, speaking: false });
+        }
       } catch (e) {
         return Promise.reject(e);
       }

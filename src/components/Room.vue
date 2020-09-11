@@ -1,6 +1,5 @@
 <template>
 <div class="room">
-    <h3>ЭТО ПРОТОТИП ТУТ НЕТ НИКАКОГО ДИЗАЙНА!!</h3>
     <audio ref="audioZone" autoplay/>
     <UserPane :user="user" @handleChangeMicState="changeMicState"/>
     <GuestList v-if="guestList.filter(g => g.id !== user.id).length"/>
@@ -29,13 +28,21 @@ export default {
   async mounted() {
     try {
       const roomId = this.roomId;
+      let userId = localStorage.getItem(`${ roomId }_USER_ID`);
 
-      await this.createUser(roomId);
+      if (userId) {
+        await this.getCurrentUser(userId);
+      }
+
+      if (!this.user.id) {
+        await this.createUser(roomId);
+      }
+
       await this.fetchRoom(roomId);
       await this.fetchGuests(roomId);
       await this.fetchMessages(roomId);
 
-      const userId = this.user.id;
+      userId = this.user.id;
       webSocketService.init(roomId, userId);
 
       janusService.setAudioElement(this.$refs.audioZone);
@@ -55,12 +62,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['createUser', 'setMicState']),
+    ...mapActions('user', ['fetchUser', 'createUser', 'setMicState']),
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('message', ['fetchMessages']),
     async changeMicState() {
       this.isMicOn = !this.isMicOn;
+    },
+    async getCurrentUser(id) {
+      await this.fetchUser(id);
     }
   },
   computed: {

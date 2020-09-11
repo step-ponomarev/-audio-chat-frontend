@@ -40,3 +40,17 @@ export async function removeGuest(guestId) {
     return Promise.reject(e);
   }
 }
+
+export async function getGuest(guestId) {
+  try {
+    const response = await fetch(`${ host }/api/guest/${ guestId }`);
+
+    if (!response.ok) {
+      throw new Error("Error findUser guest");
+    }
+
+    return response.json();
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
