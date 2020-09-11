@@ -2,6 +2,7 @@ module.exports = {
   devServer: {
     port: 8081
   },
+
   configureWebpack: {
     module: {
       rules: [
@@ -14,5 +15,16 @@ module.exports = {
         }
       ]
     }
-  }
+  },
+
+  pluginOptions: {
+    quasar: {
+      importStrategy: 'kebab',
+      rtlSupport: true
+    }
+  },
+
+  transpileDependencies: [
+    'quasar'
+  ]
 }

@@ -1,7 +1,7 @@
 <template>
-    <div ref="messageList" class="messageList">
-        <MessageItem v-for="(message, index) in messageList" :key="index" :message="message"/>
-    </div>
+         <q-scroll-area class="messageList q-pa-md row justify-center" ref="messageList" @scroll="onScroll">
+            <MessageItem v-for="(message, index) in messageList" :key="index" :message="message" class="q-py-xs"/>
+         </q-scroll-area>
 </template>
 
 <script>
@@ -11,25 +11,38 @@ import MessageItem from "@/components/chat/MessageItem";
 export default {
   name: "MessageList",
   components: { MessageItem },
+  data: () => ({
+    firstScroll: true,
+    currentScrollSize: 0,
+    vSize: '',
+  }),
+  methods: {
+    onScroll(info) {
+      if (this.currentScrollSize !== info.verticalSize) {
+        this.handleScrollSizeChanged(info);
+        this.currentScrollSize = info.verticalSize;
+      }
+    },
+    handleScrollSizeChanged(info) {
+      if (this.firstScroll) {
+        this.scrollDown(info.verticalSize);
+        this.firstScroll = false;
+      } else if (this.currentScrollSize === info.verticalPosition + 218) {
+        this.scrollDown(info.verticalSize);
+      }
+    },
+    scrollDown(pos) {
+      this.$refs.messageList.setScrollPosition(pos);
+    },
+  },
   computed: {
     ...mapGetters('message', ['messageList'])
   },
-  watch: {
-    messageList() {
-      this.$refs.messageList.scrollTop = this.$refs.messageList.scrollHeight;
-    }
-  }
 }
 </script>
 
 <style scoped>
     .messageList {
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1em;
-        max-height: 250px;
-        box-sizing: border-box;
+        height: 250px;
     }
 </style>

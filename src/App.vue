@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view>
+
+    </router-view>
   </div>
 </template>
 
@@ -13,7 +15,7 @@ export default {
 
 <style>
   html, body {
-    margin: 0;
+      margin: 0;
       width: 100%;
       height: 100%;
       box-sizing: border-box;
@@ -28,17 +30,17 @@ export default {
       width: 100%;
       height: 100%;
       box-sizing: border-box;
-    background-image: url("assets/background.jpg");
+      background-image: url("assets/background.jpg");
   }
 
   .ui-element {
-    background-color: white;
-    box-sizing: border-box;
+      background-color: white;
+      box-sizing: border-box;
   }
 
   .centered {
-    position: absolute;
-    top: 40%;
-    left: 40%;
+      position: absolute;
+      top: 40%;
+      left: 40%;
   }
 </style>

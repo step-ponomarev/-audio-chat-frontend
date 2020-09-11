@@ -1,8 +1,5 @@
 <template>
-    <label>
-        Сообщение
-<input type="text" @keypress.enter="onEnter" v-model="message"/>
-</label>
+    <q-input filled v-model="message" @keypress.enter="onEnter" bg-color="light-green-5"/>
 </template>
 <script>
 

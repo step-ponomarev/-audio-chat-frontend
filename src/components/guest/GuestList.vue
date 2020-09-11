@@ -21,10 +21,14 @@ export default {
 <style scoped>
 .guestList {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 100px));
+    grid-template-rows: repeat(auto-fit, minmax(100px, 100px));
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    overflow-y: auto;
     border: #eeeeee solid 1px;
-    padding: 1em;
     box-sizing: border-box;
-    margin: 0.5em;
+    width: 150px;
+    margin-top: 0.5em;
 }
 </style>

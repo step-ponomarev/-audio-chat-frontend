@@ -1,1 +1,2 @@
 import './janus';
+import './quasar';

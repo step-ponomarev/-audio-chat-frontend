@@ -1,4 +1,3 @@
-import roomSocketService from "@/service/ws/roomSocketService";
 import { createGuest } from "@/service/ajax/guestService";
 import mutations from "@/store/mutations";
 import Vue from 'vue';
@@ -19,7 +18,7 @@ const user = {
       try {
         const addedGuest = await createGuest(roomId);
 
-        dispatch('setUser', addedGuest);
+        dispatch('setUser', { ...addedGuest, speaking: false });
       } catch (e) {
         return Promise.reject(e);
       }
@@ -27,13 +26,8 @@ const user = {
     setUser({ commit }, user) {
       commit(SET_USER, user);
     },
-    async setMicState({ commit, state }, micState) {
-      try {
-        await roomSocketService.setUserMicState(state.user.id, micState);
-        commit(SET_USER_MIC_STATE, micState);
-      } catch (e) {
-        return Promise.reject(e);
-      }
+    setMicState({ commit }, micState) {
+      commit(SET_USER_MIC_STATE, micState);
     }
   },
   mutations: {

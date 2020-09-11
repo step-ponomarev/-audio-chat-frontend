@@ -2037,7 +2037,7 @@ function Janus(gatewayCallbacks) {
             } catch (e) {
               Janus.error(e);
             }
-            ;
+            
           }
         };
       };

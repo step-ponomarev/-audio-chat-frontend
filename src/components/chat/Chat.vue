@@ -1,7 +1,7 @@
 <template>
     <div class="ui-element">
         <MessageList/>
-        <input-area @handleSendMessage="sendMessage"/>
+        <InputArea @handleSendMessage="sendMessage"/>
     </div>
 </template>
 

@@ -1,8 +1,5 @@
 <template>
     <div class="mainPage">
-        <header>
-        <h1>Создай комнату!</h1>
-    </header>
     <main>
         <CreateRoomButton @handleClickButton="createRoom" class="centered"/>
     </main>
