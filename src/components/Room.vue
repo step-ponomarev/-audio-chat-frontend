@@ -34,7 +34,7 @@ export default {
         await this.getCurrentUser(userId);
       }
 
-      if (!this.user.id) {
+      if (this.user.id === undefined) {
         await this.createUser(roomId);
       }
 
@@ -53,7 +53,7 @@ export default {
     }
   },
   destroyed() {
-    webSocketService.disconnect(this.user.id);
+    webSocketService.disconnect();
   },
   watch: {
     isMicOn(value) {

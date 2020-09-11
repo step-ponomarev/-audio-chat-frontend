@@ -29,9 +29,7 @@ const user = {
       try {
         const currentUser = await getGuest(userId);
 
-        if (currentUser !== null) {
-          dispatch('setUser', { ...currentUser, speaking: false });
-        }
+        dispatch('setUser', { ...currentUser, speaking: false });
       } catch (e) {
         return Promise.reject(e);
       }
