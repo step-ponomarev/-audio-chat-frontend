@@ -14,28 +14,35 @@ const user = {
     user: ({ user }) => user
   },
   actions: {
-    async createUser({ dispatch }, roomId) {
+    async fetchUser({ commit, dispatch }, roomId) {
+      try {
+        const savedUserId = localStorage.getItem(`${ roomId }_USER_ID`);
+
+        if (!savedUserId) {
+          try {
+            await dispatch('createUser', roomId);
+          } catch (e) {
+            return Promise.reject(e);
+          }
+        } else {
+          const currentUser = await getGuest(savedUserId);
+
+          commit(SET_USER, { ...currentUser, speaking: false });
+        }
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    async createUser({ commit }, roomId) {
       try {
         const addedGuest = await createGuest(roomId);
 
         localStorage.setItem(`${ roomId }_USER_ID`, addedGuest.id);
 
-        dispatch('setUser', { ...addedGuest, speaking: false });
+        commit(SET_USER, { ...addedGuest, speaking: false });
       } catch (e) {
         return Promise.reject(e);
       }
-    },
-    async fetchUser({ dispatch }, userId) {
-      try {
-        const currentUser = await getGuest(userId);
-
-        dispatch('setUser', { ...currentUser, speaking: false });
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
-    setUser({ commit }, user) {
-      commit(SET_USER, user);
     },
     setMicState({ commit }, micState) {
       commit(SET_USER_MIC_STATE, micState);

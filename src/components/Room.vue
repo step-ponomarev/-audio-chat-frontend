@@ -28,21 +28,13 @@ export default {
   async mounted() {
     try {
       const roomId = this.roomId;
-      let userId = localStorage.getItem(`${ roomId }_USER_ID`);
 
-      if (userId) {
-        await this.getCurrentUser(userId);
-      }
-
-      if (this.user.id === undefined) {
-        await this.createUser(roomId);
-      }
-
+      await this.fetchUser(roomId);
       await this.fetchRoom(roomId);
       await this.fetchGuests(roomId);
       await this.fetchMessages(roomId);
 
-      userId = this.user.id;
+      const userId = this.user.id;
       webSocketService.init(roomId, userId);
 
       janusService.setAudioElement(this.$refs.audioZone);
@@ -62,16 +54,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['fetchUser', 'createUser', 'setMicState']),
+    ...mapActions('user', ['fetchUser', 'setMicState']),
     ...mapActions('guest', ['fetchGuests']),
     ...mapActions('room', ['fetchRoom']),
     ...mapActions('message', ['fetchMessages']),
     async changeMicState() {
       this.isMicOn = !this.isMicOn;
     },
-    async getCurrentUser(id) {
-      await this.fetchUser(id);
-    }
   },
   computed: {
     ...mapGetters('room', ['room']),
