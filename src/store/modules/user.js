@@ -30,7 +30,11 @@ const user = {
           commit(SET_USER, { ...currentUser, speaking: false });
         }
       } catch (e) {
-        return Promise.reject(e);
+        try {
+          await dispatch('createUser', roomId);
+        } catch (e) {
+          return Promise.reject(e);
+        }
       }
     },
     async createUser({ commit }, roomId) {
