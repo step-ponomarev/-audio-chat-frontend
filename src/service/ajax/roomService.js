@@ -1,4 +1,4 @@
-const host = 'http://localhost:8080'
+import {URL} from "@/config/conf";
 
 /**
  *
@@ -7,7 +7,7 @@ const host = 'http://localhost:8080'
  */
 export async function getRoom(id) {
   try {
-    const response = await fetch(`${ host }/api/room/${ id }`);
+    const response = await fetch(`${ URL }/api/room/${ id }`);
 
     if (response.ok) return await response.json();
 
@@ -17,15 +17,9 @@ export async function getRoom(id) {
   }
 }
 
-export async function createRoom(audioRoomId) {
+export async function createRoom() {
   try {
-    const response = await fetch(`${ host }/api/room/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain; charset=UTF-8"
-      },
-      body: audioRoomId
-    });
+    const response = await fetch(`${ URL }/api/room/create`);
 
     if (response.ok) return await response.json();
   } catch (e) {

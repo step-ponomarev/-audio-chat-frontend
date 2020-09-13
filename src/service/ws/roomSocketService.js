@@ -5,6 +5,7 @@ import {
   onUserLeaved,
   onMessageReceived
 } from "@/service/ws/wsCallbacks";
+import { sockJsServer } from "@/config/conf";
 
 class RoomSocketService {
   constructor() {
@@ -14,7 +15,7 @@ class RoomSocketService {
 
   //TODO: переписать на подписку по ID юзера
   init(roomId, userId) {
-    this._socket = new SockJS('http://localhost:8080/chat-app')
+    this._socket = new SockJS(sockJsServer)
     this._stompClient = Stomp.over(this._socket);
 
     const successCallBack = () => {

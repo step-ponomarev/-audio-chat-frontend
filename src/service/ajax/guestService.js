@@ -1,4 +1,4 @@
-const host = 'http://localhost:8080'
+import {HOST} from "@/config/conf";
 
 /**
  *
@@ -7,7 +7,7 @@ const host = 'http://localhost:8080'
  */
 export async function getGuests(roomId) {
   try {
-    const response = await fetch(`${ host }/api/guest/room/${ roomId }`);
+    const response = await fetch(`${ HOST }/api/guest/room/${ roomId }`);
 
     if (response.ok) return await response.json();
 
@@ -19,7 +19,7 @@ export async function getGuests(roomId) {
 
 export async function createGuest(roomId) {
   try {
-    const response = await fetch(`${ host }/api/guest/room/${ roomId }/create`);
+    const response = await fetch(`${ HOST }/api/guest/room/${ roomId }/create`);
 
     if (response.ok) return await response.json();
 
@@ -31,7 +31,7 @@ export async function createGuest(roomId) {
 
 export async function removeGuest(guestId) {
   try {
-    const response = await fetch(`${ host }/api/guest/${ guestId }/remove`);
+    const response = await fetch(`${ HOST }/api/guest/${ guestId }/remove`);
 
     if (!response.ok) {
       throw new Error("Error removing guest");
@@ -43,7 +43,7 @@ export async function removeGuest(guestId) {
 
 export async function getGuest(guestId) {
   try {
-    const response = await fetch(`${ host }/api/guest/${ guestId }`);
+    const response = await fetch(`${ HOST }/api/guest/${ guestId }`);
 
     if (!response.ok) {
       throw new Error("Error findUser guest");

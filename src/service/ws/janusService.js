@@ -1,5 +1,6 @@
 import { Janus } from 'janus-gateway';
 import store from "@/store";
+import {socketServer, httpServer} from "@/config/conf";
 
 import { onJenusSuccessfullyCreated, onJenusFailedCreated, onJunusDestroyed } from "@/service/ws/jenusCallbacks";
 
@@ -26,8 +27,7 @@ const iseServers = {
   ]
 }
 
-const socketServer = "ws://localhost:8188/";
-const httpServer = "http://localhost:8088/janus";
+
 
 class JanusService {
   /**
