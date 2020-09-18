@@ -141,6 +141,7 @@ class JanusService {
    * @private
    */
   _handleEvent(msg) {
+    console.error(msg);
     const event = msg['audiobridge'];
 
     if (event === undefined || event === null) {

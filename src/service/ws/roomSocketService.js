@@ -1,5 +1,5 @@
 import SockJS from 'sockjs-client';
-import { Stomp } from "@stomp/stompjs";
+import Stomp from "webstomp-client";
 import {
   onUserJoined,
   onUserLeaved,
@@ -15,7 +15,7 @@ class RoomSocketService {
 
   //TODO: переписать на подписку по ID юзера
   init(roomId, userId) {
-    this._socket = new SockJS(sockJsServer)
+    this._socket = new SockJS(sockJsServer);
     this._stompClient = Stomp.over(this._socket);
 
     const successCallBack = () => {
