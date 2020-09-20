@@ -1,8 +1,11 @@
 <template>
 <div class="room">
+    <ToolBar @handleClickMenu="onOpenMenu"/>
+    <Menu :showed="menuIsShowed">
+        <UserPane :user="user" @handleChangeMicState="changeMicState"/>
+        <GuestList v-if="guestList.filter(g => g.id !== user.id).length"/>
+    </Menu>
     <audio ref="audioZone" autoplay/>
-    <UserPane :user="user" @handleChangeMicState="changeMicState"/>
-    <GuestList v-if="guestList.filter(g => g.id !== user.id).length"/>
     <router-link :to="{ name: 'main'}">Выйти</router-link>
     <Notifications/>
     <Chat
@@ -18,13 +21,16 @@ import GuestList from "@/components/guest/GuestList";
 import Chat from "@/components/chat/Chat";
 import janusService from "@/service/ws/janusService";
 import UserPane from "@/components/user/UserPane";
+import ToolBar from "@/components/toolbar/ToolBar";
+import Menu from "@/components/Menu";
 
 export default {
   name: "Room",
   data: () => ({
-    isMicOn: false
+    isMicOn: false,
+    menuIsShowed: false
   }),
-  components: { UserPane, Chat, GuestList, Notifications },
+  components: { Menu, ToolBar, UserPane, Chat, GuestList, Notifications },
   async mounted() {
     try {
       const roomId = this.roomId;
@@ -61,6 +67,10 @@ export default {
     async changeMicState() {
       this.isMicOn = !this.isMicOn;
     },
+    onOpenMenu() {
+      console.error("KEK")
+      this.menuIsShowed = true;
+    }
   },
   computed: {
     ...mapGetters('room', ['room']),
@@ -68,7 +78,7 @@ export default {
     ...mapGetters('guest', ['guestList']),
     roomId() {
       return this.$route.params.id;
-    }
+    },
   },
 }
 </script>
@@ -76,6 +86,5 @@ export default {
 <style scoped>
 .room {
     box-sizing: border-box;
-    padding: 0.5em;
 }
 </style>

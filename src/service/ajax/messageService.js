@@ -1,4 +1,4 @@
-import {URL} from "@/config/conf";
+import { URL } from "@/config/conf";
 
 /**
  *

@@ -44,7 +44,7 @@ class RoomSocketService {
       throw new Error("Failed message sending");
     }
 
-    this._stompClient.send(`/app/message/room/${ roomId }/guest/${ guestId }/sendMessage`, {}, msg);
+    this._stompClient.send(`/app/message/room/${ roomId }/guest/${ guestId }/sendMessage`, msg, {});
   }
 
   disconnect() {

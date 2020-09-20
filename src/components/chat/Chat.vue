@@ -1,7 +1,7 @@
 <template>
     <div class="chat">
         <ChatTools @handleClickHideChat="hideChat"/>
-        <div v-if="!hidden" class="ui-element user-chat">
+        <div v-if="!hidden" class="ui-element" :class="hideChat">
             <MessageList/>
             <InputArea @handleSendMessage="sendMessage"/>
         </div>
@@ -10,6 +10,7 @@
 
 <script>
 //TODO: Отделить тулзы чата в отдельные компоненты
+//TODO: https://quasar.dev/vue-components/infinite-scroll
 import roomSocketService from "@/service/ws/roomSocketService";
 import InputArea from "@/components/chat/InputArea";
 import MessageList from "@/components/chat/MessageList";
@@ -42,6 +43,11 @@ export default {
     },
     userId() {
       return this.user.id;
+    },
+    hiddenStyle() {
+      return {
+        "showed-chat":  !this.hidden
+      }
     }
   }
 }
@@ -54,7 +60,7 @@ export default {
         z-index: 2000;
     }
 
-    .user-chat {
+    .showed-chat {
         animation-name: bounceOutUp;
         animation-duration: 200ms;
     }
@@ -68,5 +74,4 @@ export default {
             transform: translateY(0);
         }
     }
-
 </style>

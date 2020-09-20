@@ -1,10 +1,10 @@
 <template>
-    <div class="guestList ui-element">
-        <GuestItem v-for="(guest) in guestList.filter(g => g.id !== user.id)"
-                   :guest="guest"
-                   :key="guest.sessionId"
-        />
-    </div>
+    <q-scroll-area class="ui-element guestList">
+      <GuestItem v-for="(guest) in guestList.filter(g => g.id !== user.id)"
+                 :guest="guest"
+                 :key="guest.sessionId"
+      />
+    </q-scroll-area>
 </template>
 
 <script>
@@ -23,15 +23,11 @@ export default {
 
 <style scoped>
 .guestList {
-    display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(100px, 100px));
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    overflow-y: auto;
-    border: #eeeeee solid 1px;
-    box-sizing: border-box;
-    width: 150px;
+    height: 600px;
+    width: 200px;
     margin-top: 0.5em;
+    padding: 1em 1em;
+    box-sizing: border-box;
+    border: 1px solid #cdcdcd;
 }
 </style>
