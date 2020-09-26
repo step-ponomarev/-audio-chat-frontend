@@ -1,10 +1,14 @@
 <template>
-    <div class="menu" :class="isShowed">
-        askasl
-        <slot>
 
-        </slot>
+        <div>
+             <div class="menu" :class="isShowed">
+
+         <slot>
+             </slot>
+                 </div>
     </div>
+
+
 </template>
 
 <script>
@@ -15,12 +19,7 @@ export default {
       Type: Boolean
     }
   },
-  methods: {
-    hideMenu() {
-
-    }
-  }
-  ,
+  methods: {},
   computed: {
     isShowed() {
       return {
@@ -34,9 +33,6 @@ export default {
 
 <style scoped>
     .menu {
-        position: absolute;
-        width: 20%;
-        height: 20%;
     }
 
     .showed {
@@ -53,19 +49,4 @@ export default {
             transform: translateX(0);
         }
     }
-
-    /*.hidden {*/
-    /*    animation-name: bounceOutLeft;*/
-    /*    animation-duration: 200ms;*/
-    /*}*/
-
-    /*@keyframes bounceOutRight {*/
-    /*    0% {*/
-    /*        transform: translateX(0);*/
-    /*    }*/
-
-    /*    100% {*/
-    /*        transform: translateX(-100%);*/
-    /*    }*/
-    /*}*/
 </style>

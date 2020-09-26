@@ -1,15 +1,20 @@
 <template>
 <div class="room">
-    <ToolBar @handleClickMenu="onOpenMenu"/>
-    <Menu :showed="menuIsShowed">
-        <UserPane :user="user" @handleChangeMicState="changeMicState"/>
-        <GuestList v-if="guestList.filter(g => g.id !== user.id).length"/>
-    </Menu>
     <audio ref="audioZone" autoplay/>
-    <router-link :to="{ name: 'main'}">Выйти</router-link>
-    <Notifications/>
-    <Chat
-        style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; box-sizing: border-box;"/>
+    <ToolBar @handleClickMenu="onOpenMenu" class="toolbar"/>
+    <main class="main">
+     <Menu :showed="menuIsShowed" class="menu">
+         <div class="menu-items">
+             <UserPane :user="user" @handleChangeMicState="changeMicState"/>
+             <GuestList v-if="guestList.filter(g => g.id !== user.id).length" style="min-height: 400px; max-height: 600px"/>
+         </div>
+    </Menu>
+    <div class="content">
+        <router-link :to="{ name: 'main'}">Выйти</router-link>
+        <Notifications/>
+        <Chat style="position: absolute; bottom: 0; left: 0; right: 0;  box-sizing: border-box;"/>
+    </div>
+    </main>
 </div>
 </template>
 
@@ -68,8 +73,7 @@ export default {
       this.isMicOn = !this.isMicOn;
     },
     onOpenMenu() {
-      console.error("KEK")
-      this.menuIsShowed = true;
+      this.menuIsShowed = !this.menuIsShowed;
     }
   },
   computed: {
@@ -79,12 +83,49 @@ export default {
     roomId() {
       return this.$route.params.id;
     },
+
   },
 }
 </script>
 
 <style scoped>
 .room {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    grid-template-rows: 1fr 100fr;
+    align-content: start;
+    gap: 0;
+}
+
+.menu {
+    width: max-content;
+    box-sizing: border-box;
+}
+
+.menu-items {
+    display: grid;
+    gap: 0;
+    grid-template-rows: auto;
+    height: 100%;
+}
+
+.toolbar {
+    align-self: flex-start;
+}
+
+.main {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1000fr;
+    box-sizing: border-box;
+    align-self: flex-start;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
     box-sizing: border-box;
 }
 </style>

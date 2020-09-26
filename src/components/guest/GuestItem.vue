@@ -1,10 +1,12 @@
 <template>
-  <q-chip>
-        <q-avatar>
-          <img src="@/assets/anon-avatar.png" alt="guest avatar"/>
-        </q-avatar>
-        {{ guestName }}
-      </q-chip>
+    <q-item v-ripple class="guest-item">
+        <q-item-section avatar>
+          <q-avatar>
+            <img src="@/assets/anon-avatar.png">
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>{{ guestName }}</q-item-section>
+      </q-item>
 </template>
 
 <script>
@@ -31,4 +33,7 @@ export default {
 </script>
 
 <style scoped>
+    .guest-item {
+        width: max-content;
+    }
 </style>
